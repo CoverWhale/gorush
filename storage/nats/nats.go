@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/appleboy/gorush/config"
+	"github.com/appleboy/gorush/logx"
 	"github.com/nats-io/nats.go"
 )
 
@@ -32,38 +33,43 @@ type Storage struct {
 func (s *Storage) Add(key string, count int64) {
 	kv, err := s.js.KeyValue(s.bucket)
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
+		return
 	}
 	_, err = kv.Put(key, []byte(strconv.Itoa(int(count))))
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
 	}
 }
 
 func (s *Storage) Set(key string, count int64) {
 	kv, err := s.js.KeyValue(s.bucket)
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
+		return
 	}
 	_, err = kv.Put(key, []byte(strconv.Itoa(int(count))))
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
 	}
 }
 
 func (s *Storage) Get(key string) int64 {
 	kv, err := s.js.KeyValue(s.bucket)
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
 	}
+
 	v, err := kv.Get(key)
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
 	}
+
 	count, err := strconv.ParseInt(string(v.Value()), 10, 64)
 	if err != nil {
-		fmt.Print(err.Error())
+		logx.LogAccess.Error(err)
 	}
+
 	return count
 }
 

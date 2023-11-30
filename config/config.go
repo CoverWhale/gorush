@@ -104,7 +104,7 @@ log:
   hide_messages: false
 
 stat:
-  engine: "memory" # support memory, redis, boltdb, buntdb or leveldb
+  engine: "memory" # support memory, redis, boltdb, buntdb, nats or leveldb
   redis:
     cluster: false
     addr: "localhost:6379" # if cluster is true, you may set this to "localhost:6379,localhost:6380,localhost:6381"
@@ -119,6 +119,9 @@ stat:
     path: "level.db"
   badgerdb:
     path: "badger.db"
+  nats:
+    addr: "nats://127.0.0.1:4222"
+    bucket: "gorush"
 `)
 
 // ConfYaml is config structure.
@@ -225,7 +228,7 @@ type SectionStat struct {
 	BuntDB   SectionBuntDB   `yaml:"buntdb"`
 	LevelDB  SectionLevelDB  `yaml:"leveldb"`
 	BadgerDB SectionBadgerDB `yaml:"badgerdb"`
-	NATS     SectionNATS     `yaml:"nats"`
+	NATS     NATS            `yaml:"nats"`
 }
 
 // SectionQueue is sub section of config.
@@ -245,9 +248,15 @@ type SectionNSQ struct {
 
 // SectionNATS is sub section of config.
 type SectionNATS struct {
+	NATS
+	Subj  string `yaml:"subj"`
+	Queue string `yaml:"queue"`
+}
+
+// Nats holds the addr for both the queue and the storage and the
+// bucket for the storage.
+type NATS struct {
 	Addr   string `yaml:"addr"`
-	Subj   string `yaml:"subj"`
-	Queue  string `yaml:"queue"`
 	Bucket string `yaml:"bucket"`
 }
 
@@ -417,7 +426,6 @@ func LoadConf(confPath ...string) (*ConfYaml, error) {
 	conf.Queue.NATS.Addr = viper.GetString("queue.nats.addr")
 	conf.Queue.NATS.Subj = viper.GetString("queue.nats.subj")
 	conf.Queue.NATS.Queue = viper.GetString("queue.nats.queue")
-	conf.Queue.NATS.Bucket = viper.GetString("queue.nats.bucket")
 	conf.Queue.Redis.Addr = viper.GetString("queue.redis.addr")
 	conf.Queue.Redis.StreamName = viper.GetString("queue.redis.stream_name")
 	conf.Queue.Redis.Group = viper.GetString("queue.redis.group")
@@ -434,6 +442,8 @@ func LoadConf(confPath ...string) (*ConfYaml, error) {
 	conf.Stat.BuntDB.Path = viper.GetString("stat.buntdb.path")
 	conf.Stat.LevelDB.Path = viper.GetString("stat.leveldb.path")
 	conf.Stat.BadgerDB.Path = viper.GetString("stat.badgerdb.path")
+	conf.Stat.NATS.Addr = viper.GetString("stat.nats.addr")
+	conf.Stat.NATS.Bucket = viper.GetString("stat.nats.bucket")
 
 	// gRPC Server
 	conf.GRPC.Enabled = viper.GetBool("grpc.enabled")
