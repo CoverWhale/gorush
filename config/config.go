@@ -225,6 +225,7 @@ type SectionStat struct {
 	BuntDB   SectionBuntDB   `yaml:"buntdb"`
 	LevelDB  SectionLevelDB  `yaml:"leveldb"`
 	BadgerDB SectionBadgerDB `yaml:"badgerdb"`
+	NATS     SectionNATS     `yaml:"nats"`
 }
 
 // SectionQueue is sub section of config.
@@ -244,9 +245,10 @@ type SectionNSQ struct {
 
 // SectionNATS is sub section of config.
 type SectionNATS struct {
-	Addr  string `yaml:"addr"`
-	Subj  string `yaml:"subj"`
-	Queue string `yaml:"queue"`
+	Addr   string `yaml:"addr"`
+	Subj   string `yaml:"subj"`
+	Queue  string `yaml:"queue"`
+	Bucket string `yaml:"bucket"`
 }
 
 // SectionRedisQueue is sub section of config.
@@ -415,6 +417,7 @@ func LoadConf(confPath ...string) (*ConfYaml, error) {
 	conf.Queue.NATS.Addr = viper.GetString("queue.nats.addr")
 	conf.Queue.NATS.Subj = viper.GetString("queue.nats.subj")
 	conf.Queue.NATS.Queue = viper.GetString("queue.nats.queue")
+	conf.Queue.NATS.Bucket = viper.GetString("queue.nats.bucket")
 	conf.Queue.Redis.Addr = viper.GetString("queue.redis.addr")
 	conf.Queue.Redis.StreamName = viper.GetString("queue.redis.stream_name")
 	conf.Queue.Redis.Group = viper.GetString("queue.redis.group")

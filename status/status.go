@@ -11,6 +11,7 @@ import (
 	"github.com/appleboy/gorush/storage/buntdb"
 	"github.com/appleboy/gorush/storage/leveldb"
 	"github.com/appleboy/gorush/storage/memory"
+	"github.com/appleboy/gorush/storage/nats"
 	"github.com/appleboy/gorush/storage/redis"
 
 	"github.com/thoas/stats"
@@ -72,6 +73,8 @@ func InitAppStatus(conf *config.ConfYaml) error {
 		store = leveldb.New(conf)
 	case "badger":
 		store = badger.New(conf)
+	case "nats":
+		store = nats.New(conf)
 	default:
 		logx.LogError.Error("storage error: can't find storage driver")
 		return errors.New("can't find storage driver")

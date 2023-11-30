@@ -159,6 +159,7 @@ queue:
     addr: 127.0.0.1:4222
     subj: gorush
     queue: gorush
+    bucket: bucket
   redis:
     addr: 127.0.0.1:6379
     group: gorush
