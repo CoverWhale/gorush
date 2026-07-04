@@ -9,7 +9,7 @@ require (
 	github.com/appleboy/gofight/v2 v2.1.2
 	github.com/appleboy/graceful v0.0.4
 	github.com/asdine/storm/v3 v3.2.1
-	github.com/buger/jsonparser v1.1.1
+	github.com/buger/jsonparser v1.1.2
 	github.com/dgraph-io/badger/v3 v3.2103.5
 	github.com/gin-contrib/logger v0.2.6
 	github.com/gin-gonic/gin v1.9.1
